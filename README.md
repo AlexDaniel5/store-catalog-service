@@ -75,24 +75,37 @@ Test naming convention: `*Test` = Surefire (fast, no Docker); `*IT` = Failsafe
 
 ## Data model
 
-Two tables with a one-to-many relationship (a store has many menu items).
+Two tables with a one-to-many relationship: **one `store` has many `menu_items`**
+(`menu_items.store_id` references `stores.id`).
 
-```
-┌──────────────────────────┐          ┌──────────────────────────────┐
-│ stores                   │          │ menu_items                   │
-├──────────────────────────┤          ├──────────────────────────────┤
-│ id          BIGINT  PK   │ 1      * │ id          BIGINT  PK        │
-│ name        TEXT    NN   │─────────<│ store_id    BIGINT  FK → stores│
-│ description TEXT         │          │ name        TEXT    NN        │
-│ address     TEXT    NN   │          │ description TEXT              │
-│ phone       TEXT        │          │ price       NUMERIC(10,2) NN   │
-│ active      BOOLEAN NN   │          │ category    TEXT             │
-│ created_at  TIMESTAMP NN │          │ available   BOOLEAN NN        │
-│ updated_at  TIMESTAMP NN │          │ created_at  TIMESTAMP NN      │
-│ version     BIGINT      │          │ updated_at  TIMESTAMP NN      │
-└──────────────────────────┘          │ version     BIGINT           │
-                                       └──────────────────────────────┘
-```
+### `stores`
+
+| Column        | Type        | Constraints        |
+| ------------- | ----------- | ------------------ |
+| `id`          | `BIGINT`    | primary key        |
+| `name`        | `TEXT`      | not null           |
+| `description` | `TEXT`      |                    |
+| `address`     | `TEXT`      | not null           |
+| `phone`       | `TEXT`      |                    |
+| `active`      | `BOOLEAN`   | not null           |
+| `created_at`  | `TIMESTAMP` | not null           |
+| `updated_at`  | `TIMESTAMP` | not null           |
+| `version`     | `BIGINT`    |                    |
+
+### `menu_items`
+
+| Column        | Type            | Constraints                          |
+| ------------- | --------------- | ------------------------------------ |
+| `id`          | `BIGINT`        | primary key                          |
+| `store_id`    | `BIGINT`        | not null, foreign key → `stores.id`  |
+| `name`        | `TEXT`          | not null                             |
+| `description` | `TEXT`          |                                      |
+| `price`       | `NUMERIC(10,2)` | not null                             |
+| `category`    | `TEXT`          |                                      |
+| `available`   | `BOOLEAN`       | not null                             |
+| `created_at`  | `TIMESTAMP`     | not null                             |
+| `updated_at`  | `TIMESTAMP`     | not null                             |
+| `version`     | `BIGINT`        |                                      |
 
 `created_at` / `updated_at` are managed automatically via JPA auditing; `version` powers
 optimistic locking.
