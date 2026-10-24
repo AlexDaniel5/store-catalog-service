@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: store-catalog-service
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/catalog}
+    username: ${DB_USERNAME:catalog}
+    password: ${DB_PASSWORD:catalog}
+  jpa:
+    open-in-view: false
+    hibernate:
+      # Convenient for local/dev. A real deployment should manage schema with a
+      # migration tool (Flyway/Liquibase) and set this to 'validate'.
+      ddl-auto: ${JPA_DDL_AUTO:update}
+    properties:
+      hibernate:
+        format_sql: true
+  jackson:
+    default-property-inclusion: non_null
+
+server:
+  error:
+    include-message: never
+    include-stacktrace: never
+
+# Cap page size so clients cannot request unbounded result sets.
+spring.data.web.pageable:
+  max-page-size: 100
+  default-page-size: 20
+
+logging:
+  level:
+    org.hibernate.SQL: info

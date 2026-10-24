@@ -1,0 +1,15 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: false
+  datasource:
+    # URL/credentials are supplied dynamically by the Testcontainers @ServiceConnection.
+    hikari:
+      maximum-pool-size: 4
+
+logging:
+  level:
+    org.hibernate.SQL: warn
